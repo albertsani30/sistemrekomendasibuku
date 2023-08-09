@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>{{head}}</title>
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/survey.css') }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+<style>
+    th {
+        text-align: center;
+    }
+    .card {
+        margin-bottom: 50px; /* Add margin at the bottom to create space between the divs */
+    }
+
+</style>
+{% endblock %}
+{% block body %}
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a
+                class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="home">
+                <div class="sidebar-brand-icon"
+                    src="https://rekreartive.com/wp-content/uploads/2018/10/Logo-Petra-Universitas-Kristen-Petra-Original-PNG.png">
+                    <img src="https://rekreartive.com/wp-content/uploads/2018/10/Logo-Petra-Universitas-Kristen-Petra-Original-PNG.png"
+                        width=50px height=50px>
+                </div>
+                <div class="sidebar-brand-text mx-3"><span>PETRA<br>LIBRARY<br></span></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li class="nav-item"><a class="nav-link active" href="home"><i
+                            class="fa fa-home"></i><span>HOME</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/booksrating"><i
+                            class="fas fa-table"></i><span>BOOKS RATING</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i
+                                class="fas fa-sign-out-alt"></i><span>LOGOUT</span></a></li>
+            </ul>
+            
+            <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle"
+                    type="button"></button></div>
+        </div>
+    </nav>
+    <!--Top Bar-->
+    <div class="d-flex flex-column" id="content-wrapper">
+    <div id="content">
+        <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+            <div class="container">
+                <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i
+                        class="fas fa-bars"></i></button>
+                <h5 class="text-dark">{{head}}</h5>
+                <ul class="navbar-nav flex-nowrap ms-auto">
+                    <div class="d-none d-sm-block topbar-divider"></div>
+                    <li class="nav-item dropdown no-arrow">
+                        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                    class="d-none d-lg-inline me-2 text-gray-600 small">{{username}}&nbsp;</span><img
+                                    class="border rounded-circle img-profile"
+                                    src="https://lh3.googleusercontent.com/-qz0_tJsBGFk/AAAAAAAAAAI/AAAAAAAAAAA/ACD5Jx7p-FOnOLuyguw_VjBvt4qYzoBXfw/photo.jpg?sz=46"></a>
+                            <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                <a class="dropdown-item" href="/"><i
+                                        class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav> <!---->
+        <!--konten-->
+         <div class="container-fluid">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">{{length_books}} BUKU MAHASISWA</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                        </div>
+                        <div class="table-responsive table mt-2 container" id="dataTable" role="grid"
+                            aria-describedby="dataTable_info">
+                            <table class="table my-0" id="recommendationTable1" data-pagination="true">
+                                <thead>
+                                    <tr>
+                                        <th>Book ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Publisher</th>
+                                        <th>Subject</th>
+                                        <th>City</th>
+                                        <th>Year</th>
+                                        <th>Language</th>
+                                        <th>Jurusan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for mhs in mahasiswa.itertuples(index=False) %}
+                                    <tr>
+                                        <td>{{ mhs.book_id }}</td>
+                                        <td>{{ mhs.title }}</td>
+                                        <td>{{ mhs.author }}</td>
+                                        <td>{{ mhs.publisher }}</td>
+                                        <td>{{ mhs.subject }}</td>
+                                        <td>{{ mhs.city }}</td>
+                                        <td>{{ mhs.year}}</td>
+                                        <td>{{ mhs.language }}</td>
+                                        <td>{{ mhs.jurusan }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                             </div>
+                        </table>
+                    </div>
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="container">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold" style="text-transform:uppercase;">{{length_rec}}  BUKU REKOMENDASI {{username}}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                        </div>
+                        <div class="table-responsive table mt-2 container" id="dataTable" role="grid"
+                            aria-describedby="dataTable_info">
+                            <table class="table my-0" id="recommendationTable" data-pagination="true">
+                                <thead>
+                                    <tr>
+                                        <th>Book ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Publisher</th>
+                                        <th>Subject</th>
+                                        <th>City</th>
+                                        <th>Year</th>
+                                        <th>Language</th>
+                                        <th>Jurusan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for hybrid in hybrids.itertuples(index=False) %}
+                                    <tr>
+                                        <td>{{ hybrid.book_id }}</td>
+                                        <td>{{ hybrid.title }}</td>
+                                        <td>{{ hybrid.author }}</td>
+                                        <td>{{ hybrid.publisher }}</td>
+                                        <td>{{ hybrid.subject }}</td>
+                                        <td>{{ hybrid.city }}</td>
+                                        <td>{{ hybrid.year}}</td>
+                                        <td>{{ hybrid.language }}</td>
+                                        <td>{{ hybrid.jurusan }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                             </div>
+                        </table>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-md-6 align-self-center">
+                            <button type="submit" class="btn btn-primary" id="mySubmit" disabled>Submit</button>
+                            <input type="hidden" id="loanrow" name="loanrow">
+                        </div> -->
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <!-- <footer class="bg-white sticky-footer">
+        <div class="container my-auto">
+            <div class="text-center my-auto copyright"><span>Copyright © Petra Christian University 2023</span>
+            </div>
+        </div>
+    </footer> -->
+</div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+
+{% endblock %}
+<script>
+    $(document).ready(function() {
+        $('#recommendationTable').DataTable();
+        $('#recommendationTable1').DataTable();
+    });
+</script>
+
+<script>
+function EnableSubmit(){
+    const sbmt = document.getElementById('mySubmit')
+    const loanrowInput = document.getElementsByName('loanrow')[0]
+    const loanRow = loanrowInput.value.length > 0 ? JSON.parse(loanrowInput.value) : []
+    console.log('isi',loanRow.length)
+    if (loanRow.length > 0){
+            
+        sbmt.disabled = false;
+        sbmt.classList.remove("button-disabled")
+    }
+    else{
+        sbmt.disabled = true;
+        sbmt.classList.add("button-disabled")
+    }
+        
+}
+</script>

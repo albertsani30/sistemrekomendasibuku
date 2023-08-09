@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>{{head}}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/survey.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+{% endblock %}
+{% block body %}
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a
+                class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="home">
+                <div class="sidebar-brand-icon"
+                    src="https://rekreartive.com/wp-content/uploads/2018/10/Logo-Petra-Universitas-Kristen-Petra-Original-PNG.png">
+                    <img src="https://rekreartive.com/wp-content/uploads/2018/10/Logo-Petra-Universitas-Kristen-Petra-Original-PNG.png"
+                        width=50px height=50px>
+                </div>
+                <div class="sidebar-brand-text mx-3"><span>PETRA<br>LIBRARY<br></span></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li class="nav-item"><a class="nav-link" href="home"><i class="fa fa-home"></i><span>HOME</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link active" href="/booksrating"><i
+                            class="fas fa-table"></i><span>BOOKS
+                            RATING</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i
+                            class="fas fa-sign-out-alt"></i><span>LOGOUT</span></a></li>
+            </ul>
+            <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle"
+                    type="button"></button></div>
+        </div>
+    </nav>
+    <!--Top Bar-->
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                <div class="container">
+                    <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i
+                            class="fas fa-bars"></i></button>
+                    <h5 class="text-dark">{{head}}</h5>
+                    <ul class="navbar-nav flex-nowrap ms-auto">
+                        <div class="d-none d-sm-block topbar-divider"></div>
+                        <li class="nav-item dropdown no-arrow">
+                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                    aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
+                                        class="d-none d-lg-inline me-2 text-gray-600 small">{{username}}&nbsp;</span><img
+                                        class="border rounded-circle img-profile"
+                                        src="https://lh3.googleusercontent.com/-qz0_tJsBGFk/AAAAAAAAAAI/AAAAAAAAAAA/ACD5Jx7p-FOnOLuyguw_VjBvt4qYzoBXfw/photo.jpg?sz=46"></a>
+                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                    <a class="dropdown-item" href="/"><i
+                                            class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav> 
+            <!--flash-->
+              <!--Tabel Area-->
+            <div class="container-fluid">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{message}}</strong> 
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                    <!-- <div class="container"> -->
+                    <div class="form">
+                        <form action=" " method="POST">
+                            <div class="card shadow">
+    
+                                <div class="card-header py-3">
+                                    <div class="row g-3">
+                                        <p class="text-primary m-0 fw-bold">BOOKS RATING</p>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                        </div>
+                                        <div class="table-responsive table mt-2 container" id="dataTable" role="grid"
+                                            aria-describedby="dataTable_info">
+                                            <table class="table my-0" id="dataTables" data-pagination="true">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>Author</th>
+                                                        <th>Publisher</th>
+                                                        <th>Subject</th>
+                                                        <th>City</th>
+                                                        <th>Year</th>
+                                                        <th>Language</th>
+                                                        <th>Mata kuliah</th>
+                                                        <th>Jurusan</th>
+                                                        <th>Rating</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for bookr in booksrated %}
+                                                    <tr>
+                                                        <td>{{ bookr.title }}</td>
+                                                        <td>{{ bookr.author}}</td>
+                                                        <td>{{ bookr.publisher}}</td>
+                                                        <td>{{ bookr.subject}}</td>
+                                                        <td>{{ bookr.city}}</td>
+                                                        <td>{{ bookr.year}}</td>
+                                                        <td>{{ bookr.language}}</td>
+                                                        <td>{{ bookr.mata_kuliah}}</td>
+                                                        <td>{{ bookr.jurusan}}</td>
+
+                                                        <td>
+                                                            <fieldset class="rating">
+                                                                <input type="radio" id="field{{bookr.knokat}}_star5"
+                                                                    name="rating" onchange="EnableSubmit()" onclick="onRatingClick('{{bookr.knokat}}','{{bookr.kode_buku}}', 5)"
+                                                                    value="5" /><label class="full"
+                                                                    for="field{{bookr.knokat}}_star5"></label>
+    
+                                                                <input type="radio" id="field{{bookr.knokat}}_star4"
+                                                                    name="rating" onchange="EnableSubmit()" onclick="onRatingClick('{{bookr.knokat}}','{{bookr.kode_buku}}', 4)"
+                                                                    value="4" /><label class="full"
+                                                                    for="field{{bookr.knokat}}_star4"></label>
+    
+                                                                <input type="radio" id="field{{bookr.knokat}}_star3"
+                                                                    name="rating" onchange="EnableSubmit()" onclick="onRatingClick('{{bookr.knokat}}','{{bookr.kode_buku}}', 3)"
+                                                                    value="3" /><label class="full"
+                                                                    for="field{{bookr.knokat}}_star3"></label>
+    
+                                                                <input type="radio" id="field{{bookr.knokat}}_star2"
+                                                                    name="rating" onchange="EnableSubmit()" onclick="onRatingClick('{{bookr.knokat}}','{{bookr.kode_buku}}', 2)"
+                                                                    value="2" /><label class="full"
+                                                                    for="field{{bookr.knokat}}_star2"></label>
+    
+                                                                <input type="radio" id="field{{bookr.knokat}}_star1"
+                                                                    name="rating" onchange="EnableSubmit()" onclick="onRatingClick('{{bookr.knokat}}','{{bookr.kode_buku}}', 1)"
+                                                                    value="1" /><label class="full"
+                                                                    for="field{{bookr.knokat}}_star1"></label>
+                                                            </fieldset>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </div>
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 align-self-center">
+                                            <button type="submit" class="btn btn-primary" id="mySubmit" disabled>Submit</button>
+                                            <input type="hidden" id="ratedrow" name="ratedrow"> 
+                                        </div>
+                                        <div class="col-md-6">
+                                            <nav
+                                                class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                               
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- </div>-->
+                </div>
+            </div>
+        </div>
+    <!--footer-->
+    <footer class="bg-white sticky-footer">
+        <div class="container my-auto">
+            <div class="text-center my-auto copyright"><span>Copyright © Petra Christian University 2023</span>
+            </div>
+        </div>
+    </footer>
+</div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+<script>
+function onRatingClick(knokat,kode_buku,rating) {
+    console.log(knokat,kode_buku, "rating", rating,)
+    const ratedrowInput = document.getElementsByName('ratedrow')[0]
+    const ratedRow = ratedrowInput.value.length > 0 ? JSON.parse(ratedrowInput.value) : []
+    const foundIndex = ratedRow.findIndex((sur)=> sur["kode_buku"]== kode_buku)
+    if (foundIndex == -1){
+        ratedRow.push({knokat,kode_buku,rating})
+    }
+    else{
+        ratedRow[foundIndex]["rating"] = rating
+    }
+    ratedrowInput.value = JSON.stringify(ratedRow)
+    console.log(ratedRow)      
+}
+
+function EnableSubmit(){
+    const sbmt = document.getElementById('mySubmit')
+    const ratedrowInput = document.getElementsByName('ratedrow')[0]
+    const ratedRow = ratedrowInput.value.length > 0 ? JSON.parse(ratedrowInput.value) : []
+    console.log('isi',ratedRow.length)
+    if (ratedRow.length >= 20){
+            
+        sbmt.disabled = false;
+        sbmt.classList.remove("button-disabled")
+    }
+    else{
+        sbmt.disabled = true;
+        sbmt.classList.add("button-disabled")
+    }
+        
+}
+</script>
+
+{% endblock %}
